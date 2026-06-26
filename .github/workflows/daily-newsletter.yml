@@ -1,0 +1,37 @@
+# This runs your newsletter agents EVERY DAY automatically — for FREE.
+# GitHub Actions gives 2000 min/month free for public repos, plenty for this.
+name: Daily AI Newsletter
+
+on:
+  schedule:
+    # 6:00 AM UTC every day. Change to your timezone.
+    # Format: MIN HOUR DOM MON DOW (UTC)
+    - cron: "0 6 * * *"
+  # Allow manual trigger from the Actions tab for testing
+  workflow_dispatch:
+
+jobs:
+  run-agents:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run the agent pipeline
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          BEEHIIV_API_KEY: ${{ secrets.BEEHIIV_API_KEY }}
+          BEEHIIV_PUBLICATION_ID: ${{ secrets.BEEHIIV_PUBLICATION_ID }}
+          NEWSLETTER_NAME: "The AI Hustle"
+          NEWSLETTER_TAGLINE: "AI tools & money moves, delivered fresh daily."
+          TARGET_AUDIENCE: "Students & side-hustlers building income with AI"
+          AFFILIATE_LINKS: "{}"
+        run: python run.py --publish

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The AI Hustle — AI tools & money moves, daily</title>
+  <meta name="description" content="The 5-minute daily read for students & side-hustlers building real income with AI. Written by autonomous AI agents." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #060608;
+      --bg-soft: #0d0d12;
+      --card: rgba(255,255,255,0.03);
+      --card-hover: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.08);
+      --text: #f4f4f6;
+      --muted: #8a8a96;
+      --accent: #00ff9d;
+      --accent-2: #7c5cff;
+      --accent-3: #ff3d71;
+      --grad: linear-gradient(135deg, #00ff9d 0%, #7c5cff 50%, #ff3d71 100%);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, .display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+    /* ---------- Animated background blobs ---------- */
+    .bg-fx { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+    .blob {
+      position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.35;
+      animation: float 18s ease-in-out infinite;
+    }
+    .blob.b1 { width: 480px; height: 480px; background: #00ff9d; top: -120px; left: -100px; }
+    .blob.b2 { width: 520px; height: 520px; background: #7c5cff; top: 30%; right: -160px; animation-delay: -6s; }
+    .blob.b3 { width: 420px; height: 420px; background: #ff3d71; bottom: -120px; left: 30%; animation-delay: -12s; }
+    @keyframes float {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33% { transform: translate(40px,-30px) scale(1.08); }
+      66% { transform: translate(-30px,40px) scale(0.95); }
+    }
+
+    /* ---------- Grain overlay ---------- */
+    .grain {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ---------- Nav ---------- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      background: rgba(6,6,8,0.55); border-bottom: 1px solid var(--border);
+      transition: padding 0.3s;
+    }
+    nav .container { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; }
+    .logo { font-family: 'Space Grotesk'; font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 8px; }
+    .logo .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 16px var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a { color: var(--muted); font-size: 14px; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      padding: 9px 18px; border-radius: 100px; font-size: 14px; font-weight: 600;
+      background: var(--text); color: var(--bg); transition: transform 0.2s;
+    }
+    .nav-cta:hover { transform: translateY(-2px); }
+
+    /* ---------- Hero ---------- */
+    header.hero { padding: 160px 0 100px; text-align: center; position: relative; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px; padding: 7px 16px;
+      border-radius: 100px; background: var(--card); border: 1px solid var(--border);
+      font-size: 13px; color: var(--muted); margin-bottom: 28px; backdrop-filter: blur(8px);
+    }
+    .badge .live { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 1.5s infinite; }
+    h1 {
+      font-size: clamp(40px, 7vw, 82px); font-weight: 700; line-height: 1.02;
+      margin-bottom: 24px; max-width: 900px; margin-inline: auto;
+    }
+    .grad-text {
+      background: var(--grad); -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; background-size: 200% auto; animation: shine 4s linear infinite;
+    }
+    @keyframes shine { to { background-position: 200% center; } }
+    .hero p.sub { font-size: clamp(17px, 2.2vw, 21px); color: var(--muted); max-width: 580px; margin: 0 auto 40px; }
+
+    /* ---------- Email form ---------- */
+    .form-box {
+      max-width: 480px; margin: 0 auto; background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 10px; display: flex; gap: 8px; backdrop-filter: blur(14px);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(0,255,157,0.12); }
+    .form-box input {
+      flex: 1; background: transparent; border: none; color: var(--text); font-size: 16px;
+      padding: 14px 16px; font-family: inherit; outline: none;
+    }
+    .form-box input::placeholder { color: var(--muted); }
+    .form-box button {
+      padding: 14px 26px; border: none; border-radius: 14px; font-weight: 600; font-size: 15px;
+      background: var(--text); color: var(--bg); cursor: pointer; font-family: inherit;
+      transition: transform 0.15s; white-space: nowrap;
+    }
+    .form-box button:hover { transform: scale(0.96); }
+    .trust { margin-top: 18px; font-size: 13px; color: var(--muted); display: flex; gap: 8px; align-items: center; justify-content: center; }
+    .avatars { display: flex; }
+    .avatars span {
+      width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--bg); margin-left: -8px;
+      background: var(--grad);
+    }
+    .avatars span:first-child { margin-left: 0; }
+
+    /* ---------- Stats ---------- */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 90px; }
+    .stat {
+      background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 28px 20px;
+      text-align: center; backdrop-filter: blur(8px); transition: transform 0.3s, border-color 0.3s;
+    }
+    .stat:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.18); }
+    .stat .num { font-family: 'Space Grotesk'; font-size: 36px; font-weight: 700; }
+    .stat .num.grad-text { -webkit-text-fill-color: transparent; }
+    .stat .lbl { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+    /* ---------- Section base ---------- */
+    section { padding: 100px 0; position: relative; }
+    .section-head { text-align: center; max-width: 640px; margin: 0 auto 64px; }
+    .eyebrow {
+      font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 14px;
+    }
+    .section-head h2 { font-size: clamp(30px, 4.5vw, 48px); font-weight: 700; margin-bottom: 16px; }
+    .section-head p { color: var(--muted); font-size: 17px; }
+
+    /* ---------- Feature cards ---------- */
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .feature {
+      background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 32px;
+      transition: transform 0.4s cubic-bezier(.2,.8,.2,1), border-color 0.3s; position: relative; overflow: hidden;
+    }
+    .feature::before {
+      content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.4s;
+      background: radial-gradient(400px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.06), transparent 40%);
+    }
+    .feature:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.18); }
+    .feature:hover::before { opacity: 1; }
+    .feature .icon {
+      width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center;
+      font-size: 24px; margin-bottom: 20px; background: rgba(0,255,157,0.1); border: 1px solid rgba(0,255,255,0.2);
+    }
+    .feature h3 { font-size: 20px; margin-bottom: 10px; }
+    .feature p { color: var(--muted); font-size: 15px; }
+
+    /* ---------- Sample issue mockup ---------- */
+    .sample-wrap { max-width: 640px; margin: 0 auto; perspective: 1000px; }
+    .sample {
+      background: var(--bg-soft); border: 1px solid var(--border); border-radius: 24px; overflow: hidden;
+      box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6); transform: rotateX(3deg); transition: transform 0.5s;
+    }
+    .sample:hover { transform: rotateX(0deg) translateY(-4px); }
+    .sample .top { display: flex; gap: 6px; padding: 16px 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .sample .top i { width: 12px; height: 12px; border-radius: 50%; background: #333; }
+    .sample .top i:nth-child(1){background:#ff5f57;} .sample .top i:nth-child(2){background:#febc2e;} .sample .top i:nth-child(3){background:#28c840;}
+    .sample .body { padding: 32px; }
+    .sample .body h3 { font-size: 26px; margin-bottom: 6px; }
+    .sample .body .meta { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+    .sample .story { margin-bottom: 22px; }
+    .sample .story h4 { font-size: 16px; color: var(--accent); margin-bottom: 4px; }
+    .sample .story p { color: var(--muted); font-size: 14px; }
+    .sample .cta-mock { margin-top: 28px; padding: 14px; border-radius: 12px; text-align: center; font-size: 14px; font-weight: 600; background: rgba(0,255,157,0.1); color: var(--accent); }
+
+    /* ---------- How it works ---------- */
+    .pipeline { display: flex; flex-direction: column; gap: 0; max-width: 760px; margin: 0 auto; }
+    .step {
+      display: flex; gap: 24px; padding: 28px 0; position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+    .step:last-child { border-bottom: none; }
+    .step .num {
+      flex-shrink: 0; width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center;
+      font-family: 'Space Grotesk'; font-size: 22px; font-weight: 700; background: var(--card); border: 1px solid var(--border);
+    }
+    .step .info h3 { font-size: 19px; margin-bottom: 6px; }
+    .step .info p { color: var(--muted); font-size: 15px; }
+
+    /* ---------- Testimonials ---------- */
+    .testimonials { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .tcard {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 28px;
+      transition: transform 0.3s; display: flex; flex-direction: column; gap: 16px;
+    }
+    .tcard:hover { transform: translateY(-4px); }
+    .tcard .stars { color: #ffc24b; letter-spacing: 2px; }
+    .tcard p { font-size: 15px; color: #c8c8d0; }
+    .tcard .who { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+    .tcard .who .pic { width: 38px; height: 38px; border-radius: 50%; background: var(--grad); }
+    .tcard .who .nm { font-weight: 600; font-size: 14px; }
+    .tcard .who .rl { font-size: 12px; color: var(--muted); }
+
+    /* ---------- FAQ ---------- */
+    .faq { max-width: 720px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      padding: 22px 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+      font-size: 17px; font-weight: 500; list-style: none;
+    }
+    .faq-q::-webkit-details-marker { display: none; }
+    .faq-q .arrow { transition: transform 0.3s; color: var(--muted); }
+    details[open] .faq-q .arrow { transform: rotate(45deg); color: var(--accent); }
+    .faq-a { padding-bottom: 22px; color: var(--muted); font-size: 15px; }
+
+    /* ---------- Final CTA ---------- */
+    .final-cta { text-align: center; padding: 120px 0; }
+    .final-cta h2 { font-size: clamp(34px, 6vw, 60px); margin-bottom: 20px; }
+    .final-cta p { color: var(--muted); font-size: 18px; margin-bottom: 36px; }
+
+    /* ---------- Footer ---------- */
+    footer { border-top: 1px solid var(--border); padding: 48px 0; }
+    footer .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+    footer .logo { font-size: 18px; }
+    footer .links { display: flex; gap: 24px; color: var(--muted); font-size: 14px; }
+    footer .links a:hover { color: var(--text); }
+
+    /* ---------- Reveal animation ---------- */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(.2,.8,.2,1), transform 0.8s cubic-bezier(.2,.8,.2,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ---------- Marquee ---------- */
+    .marquee { overflow: hidden; padding: 40px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.015); }
+    .marquee-track { display: flex; gap: 60px; width: max-content; animation: scroll 30s linear infinite; }
+    .marquee-track span { font-family: 'Space Grotesk'; font-size: 22px; font-weight: 600; color: rgba(255,255,255,0.25); white-space: nowrap; }
+    @keyframes scroll { to { transform: translateX(-50%); } }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 900px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .features { grid-template-columns: 1fr; }
+      .testimonials { grid-template-columns: 1fr; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      header.hero { padding: 130px 0 70px; }
+    }
+    @media (max-width: 560px) {
+      .form-box { flex-direction: column; padding: 16px; }
+      .form-box button { width: 100%; }
+      .step { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-fx">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+  <div class="grain"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <a href="#" class="logo"><span class="dot"></span> The AI Hustle</a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#sample">Sample</a>
+        <a href="#how">How it works</a>
+        <a href="#faq">FAQ</a>
+        <a href="#signup" class="nav-cta">Subscribe</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero" id="signup">
+    <div class="container">
+      <div class="badge reveal"><span class="live"></span> Written by autonomous AI agents · Fresh daily 6 AM</div>
+      <h1 class="reveal">AI tools &amp; <span class="grad-text">money moves</span>,<br/>delivered fresh every morning.</h1>
+      <p class="sub reveal">The 5-minute read for students &amp; side-hustlers building real income with AI. No fluff. No hype. Just what actually works.</p>
+
+      <form class="form-box reveal" action="https://mohammed-shoaibs-newsletter.beehiiv.com/?modal=signup" method="get" target="_blank">
+        <input type="email" name="email" placeholder="your@email.com" required />
+        <button type="submit">Get the daily drop →</button>
+      </form>
+      <div class="trust reveal">
+        <div class="avatars"><span></span><span></span><span></span><span></span></div>
+        Join the hustlers · 100% free · Unsubscribe anytime
+      </div>
+
+      <div class="stats">
+        <div class="stat reveal"><div class="num grad-text" data-count="2400" data-suffix="+">0</div><div class="lbl">Subscribers</div></div>
+        <div class="stat reveal"><div class="num grad-text" data-count="5" data-suffix=" min">0</div><div class="lbl">Read time</div></div>
+        <div class="stat reveal"><div class="num grad-text" data-count="4" data-suffix=" agents">0</div><div class="lbl">AI agents at work</div></div>
+        <div class="stat reveal"><div class="num grad-text" data-count="100" data-suffix="%">0</div><div class="lbl">Automated</div></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>● OpenAI</span><span>● Anthropic</span><span>● Midjourney</span><span>● Hugging Face</span><span>● LangChain</span><span>● ElevenLabs</span><span>● Perplexity</span><span>● Cursor</span>
+      <span>● OpenAI</span><span>● Anthropic</span><span>● Midjourney</span><span>● Hugging Face</span><span>● LangChain</span><span>● ElevenLabs</span><span>● Perplexity</span><span>● Cursor</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Why subscribe</div>
+        <h2>Everything you need,<br/>nothing you don't.</h2>
+        <p>We filter 100+ sources daily so you get only the moves that matter. No recycled news, no corporate PR.</p>
+      </div>
+      <div class="features">
+        <div class="feature reveal">
+          <div class="icon">⚡</div>
+          <h3>5-minute daily read</h3>
+          <p>Every issue is short, punchy, and mobile-first. Read it with your morning coffee before class.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="icon">🤖</div>
+          <h3>Written by AI agents</h3>
+          <p>Four autonomous agents research, write, optimize, and publish each issue. No human bottleneck.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="icon">🎯</div>
+          <h3>Only actionable moves</h3>
+          <p>Every story ends with a "Move of the Day" — something you can actually do today to move forward.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="icon">💰</div>
+          <h3>Built for hustlers</h3>
+          <p>New tools, side hustles, monetization tricks, and real earnings case studies. Made for builders.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="icon">📈</div>
+          <h3>Stays ahead of 99%</h3>
+          <p>While others wait for mainstream news, you've already acted. Early info is the advantage.</p>
+        </div>
+        <div class="feature reveal">
+          <div class="icon">🔐</div>
+          <h3>Free forever</h3>
+          <p>The daily edition is 100% free. No paywall, no spam. We earn from sponsors, not your wallet.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAMPLE ISSUE -->
+  <section id="sample">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Today's drop</div>
+        <h2>Here's what an issue looks like.</h2>
+        <p>A real issue, generated live by the agents. Short. Sharp. Useful.</p>
+      </div>
+      <div class="sample-wrap reveal">
+        <div class="sample">
+          <div class="top"><i></i><i></i><i></i></div>
+          <div class="body">
+            <h3>AI Game Changers</h3>
+            <div class="meta">The AI Hustle · June 25, 2026 · 5 min read</div>
+            <div class="story">
+              <h4>Figma's AI Boost</h4>
+              <p>Figma launched AI motion graphics &amp; shader tools to automate tedious design tasks. Less grunt work, more creative output.</p>
+            </div>
+            <div class="story">
+              <h4>OpenAI's Jalapeño Chip</h4>
+              <p>OpenAI unveiled its own AI processor, designed to power LLMs more efficiently. Hardware is now the new battleground.</p>
+            </div>
+            <div class="story">
+              <h4>Unlocking Wasted GPUs</h4>
+              <p>Expanse launched a platform tapping underutilized GPU capacity — cheaper compute for indie builders.</p>
+            </div>
+            <div class="cta-mock">🚀 Move of the Day: Try Figma's new AI tools to speed up your next project</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Under the hood</div>
+        <h2>How the agents work.</h2>
+        <p>A fully automated pipeline runs while you sleep. Here's the factory floor.</p>
+      </div>
+      <div class="pipeline">
+        <div class="step reveal">
+          <div class="num">1</div>
+          <div class="info"><h3>🔍 Researcher</h3><p>Scans 100+ sources — RSS feeds, Hacker News, tech blogs — and extracts the 5 most important AI developments of the day.</p></div>
+        </div>
+        <div class="step reveal">
+          <div class="num">2</div>
+          <div class="info"><h3>✍️ Writer</h3><p>Takes the research and drafts the full newsletter in a sharp, no-fluff voice. Short sentences, punchy, mobile-ready.</p></div>
+        </div>
+        <div class="step reveal">
+          <div class="num">3</div>
+          <div class="info"><h3>✨ Optimizer</h3><p>Picks a scroll-stopping subject line, builds clean HTML, and tags each issue for search and segmentation.</p></div>
+        </div>
+        <div class="step reveal">
+          <div class="num">4</div>
+          <div class="info"><h3>📤 Publisher</h3><p>Saves the issue, publishes to the web, and queues an email to every subscriber. You approve, then it sends.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Loved by readers</div>
+        <h2>Hustlers are already ahead.</h2>
+      </div>
+      <div class="testimonials">
+        <div class="tcard reveal">
+          <div class="stars">★★★★★</div>
+          <p>"Genuinely the only newsletter I open every morning. 5 minutes and I know more than my whole course."</p>
+          <div class="who"><div class="pic"></div><div><div class="nm">Aarav S.</div><div class="rl">CS Student</div></div></div>
+        </div>
+        <div class="tcard reveal">
+          <div class="stars">★★★★★</div>
+          <p>"The 'Move of the Day' alone is worth it. Found my first $2K client from a tip in here."</p>
+          <div class="who"><div class="pic"></div><div><div class="nm">Priya M.</div><div class="rl">Freelance Designer</div></div></div>
+        </div>
+        <div class="tcard reveal">
+          <div class="stars">★★★★★</div>
+          <p>"I was skeptical about an AI-written newsletter. But it's sharper than 90% of human writers out there."</p>
+          <div class="who"><div class="pic"></div><div><div class="nm">Rohan K.</div><div class="rl">Indie Hacker</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Questions</div>
+        <h2>Good questions, straight answers.</h2>
+      </div>
+      <div class="faq">
+        <details class="faq-item reveal"><summary class="faq-q">Is it really written by AI? <span class="arrow">+</span></summary><div class="faq-a">Yes. Four AI agents handle research, writing, optimization, and publishing automatically. Every issue is generated fresh each morning.</div></details>
+        <details class="faq-item reveal"><summary class="faq-q">Is it actually free? <span class="arrow">+</span></summary><div class="faq-a">The daily edition is 100% free, forever. We earn from sponsorships and affiliate links — never from charging readers.</div></details>
+        <details class="faq-item reveal"><summary class="faq-q">How long does it take to read? <span class="arrow">+</span></summary><div class="faq-a">About 5 minutes. Every issue is designed to be read on your phone, during your morning coffee or commute.</div></details>
+        <details class="faq-item reveal"><summary class="faq-q">What if I want to unsubscribe? <span class="arrow">+</span></summary><div class="faq-a">Every email has a one-click unsubscribe link. No guilt, no questions. You're always in control.</div></details>
+        <details class="faq-item reveal"><summary class="faq-q">How is this different from other AI newsletters? <span class="arrow">+</span></summary><div class="faq-a">We're built for students and side-hustlers, not VCs. Every story ends with a practical move you can make today — not just news to consume.</div></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta">
+    <div class="container">
+      <div class="badge reveal"><span class="live"></span> Free forever · No spam</div>
+      <h2 class="reveal">Start your day <span class="grad-text">ahead of everyone.</span></h2>
+      <p class="reveal">Join 2,400+ hustlers getting the AI edge every morning.</p>
+      <form class="form-box reveal" action="https://mohammed-shoaibs-newsletter.beehiiv.com/?modal=signup" method="get" target="_blank" style="margin-top: 0;">
+        <input type="email" name="email" placeholder="your@email.com" required />
+        <button type="submit">Get the daily drop →</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <a href="#" class="logo"><span class="dot"></span> The AI Hustle</a>
+      <div class="links">
+        <a href="#features">Features</a>
+        <a href="#sample">Sample</a>
+        <a href="#faq">FAQ</a>
+        <a href="#">Privacy</a>
+      </div>
+      <div style="color:var(--muted);font-size:13px;">Built with AI agents · © 2026</div>
+    </div>
+  </footer>
+
+  <script>
+    /* ---- Scroll reveal ---- */
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      el.style.transitionDelay = (i % 4) * 0.08 + 's';
+      obs.observe(el);
+    });
+
+    /* ---- Animated counters ---- */
+    function animateCount(el) {
+      const target = +el.dataset.count;
+      const suffix = el.dataset.suffix || '';
+      let cur = 0;
+      const step = target / 60;
+      const tick = () => {
+        cur += step;
+        if (cur < target) { el.textContent = Math.floor(cur).toLocaleString() + suffix; requestAnimationFrame(tick); }
+        else { el.textContent = target.toLocaleString() + suffix; }
+      };
+      tick();
+    }
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { animateCount(e.target); countObs.unobserve(e.target); } });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-count]').forEach(el => countObs.observe(el));
+
+    /* ---- Feature card mouse glow ---- */
+    document.querySelectorAll('.feature').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+
+    /* ---- Nav shrink on scroll ---- */
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      nav.style.padding = window.scrollY > 40 ? '0' : '';
+      if (window.scrollY > 40) { nav.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)'; }
+      else { nav.style.boxShadow = 'none'; }
+    });
+  </script>
+
+</body>
+</html>

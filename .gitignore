@@ -1,0 +1,19 @@
+# Secrets — NEVER commit this
+.env
+*.pyc
+
+# Python
+__pycache__/
+.venv/
+venv/
+
+# Output
+archive/
+posts/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Random junk
+*.log

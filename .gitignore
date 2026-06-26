@@ -7,9 +7,10 @@ __pycache__/
 .venv/
 venv/
 
-# Output
+# Output / runtime data
 archive/
 posts/
+data/
 
 # OS
 .DS_Store

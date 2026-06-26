@@ -18,9 +18,15 @@ GROQ_API_KEY = _get("GROQ_API_KEY")
 # Gemini kept as optional fallback (not used by default)
 GEMINI_API_KEY = _get("GEMINI_API_KEY", "")
 
-# --- Email Provider ---
-BEEHIIV_API_KEY = _get("BEEHIIV_API_KEY")
-BEEHIIV_PUBLICATION_ID = _get("BEEHIIV_PUBLICATION_ID")
+# --- Email: Resend (our own system, no Beehiiv) ---
+RESEND_API_KEY = _get("RESEND_API_KEY")
+# Use a verified sender. Free Resend accounts use onboarding@resend.dev
+# Once you verify your domain, set this to newsletter@theaihustle.com
+RESEND_FROM = _get("RESEND_FROM", "The AI Hustle <onboarding@resend.dev>")
+
+# --- Public URLs ---
+LANDING_URL = _get("LANDING_URL", "https://theaihustle.surge.sh")
+BACKEND_URL = _get("BACKEND_URL", "")  # set after deploying server.py
 
 # --- Branding ---
 NEWSLETTER_NAME = _get("NEWSLETTER_NAME", "The AI Hustle")
@@ -37,6 +43,8 @@ try:
 except json.JSONDecodeError:
     AFFILIATE_LINKS = {}
 
-# --- Safety check ---
+# --- Safety checks ---
 if not GROQ_API_KEY:
     print("⚠️  WARNING: GROQ_API_KEY is not set. Add it to .env")
+if not RESEND_API_KEY:
+    print("ℹ️  NOTE: RESEND_API_KEY not set yet. Emails will be skipped until configured.")

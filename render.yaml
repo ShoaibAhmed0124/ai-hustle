@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: ai-hustle-backend
+    env: python
+    region: singapore
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn server:app
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        value: "The AI Hustle <onboarding@resend.dev>"
+      - key: NEWSLETTER_NAME
+        value: "The AI Hustle"
+      - key: LANDING_URL
+        value: "https://theaihustle.surge.sh"

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — The AI Hustle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#060608;--card:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.08);--text:#f4f4f6;--muted:#8a8a96;--accent:#00ff9d}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:40px 20px;min-height:100vh}
+    .wrap{max-width:720px;margin:0 auto}
+    h1{font-family:'Space Grotesk';font-size:30px;margin-bottom:6px}
+    .sub{color:var(--muted);margin-bottom:32px;font-size:15px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+    .stat{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;text-align:center}
+    .stat .n{font-family:'Space Grotesk';font-size:34px;font-weight:700;color:var(--accent)}
+    .stat .l{color:var(--muted);font-size:13px;margin-top:4px}
+    .section{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:20px}
+    .section h2{font-family:'Space Grotesk';font-size:18px;margin-bottom:16px}
+    .url-box{display:flex;gap:8px;align-items:center;background:#0a0a0a;border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--muted);word-break:break-all}
+    .url-box code{color:var(--accent);flex:1}
+    button{padding:10px 18px;border:none;border-radius:10px;background:var(--accent);color:#000;font-weight:600;cursor:pointer;font-family:inherit;font-size:14px}
+    button:hover{opacity:.9}
+    .note{color:var(--muted);font-size:13px;margin-top:8px}
+    @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>⚡ Admin Dashboard</h1>
+    <p class="sub">The AI Hustle — subscriber stats & settings</p>
+
+    <div class="grid">
+      <div class="stat"><div class="n" id="active">—</div><div class="l">Active subscribers</div></div>
+      <div class="stat"><div class="n" id="total">—</div><div class="l">Total signups</div></div>
+      <div class="stat"><div class="n" id="unsub">—</div><div class="l">Unsubscribed</div></div>
+    </div>
+
+    <div class="section">
+      <h2>🔗 Backend status</h2>
+      <div class="url-box">
+        <code id="backend-url">not set</code>
+        <button onclick="checkHealth()">Refresh</button>
+      </div>
+      <p class="note" id="health">Click Refresh to test the connection.</p>
+    </div>
+
+    <div class="section">
+      <h2>📋 Your subscriber list</h2>
+      <div id="list" class="note">Set your BACKEND_URL below to load the list.</div>
+    </div>
+
+    <div class="section">
+      <h2>⚙️ Setup</h2>
+      <p class="note">Paste your Render backend URL here (without trailing slash):</p>
+      <div class="url-box" style="margin-top:10px">
+        <input id="set-backend" placeholder="https://ai-hustle-backend.onrender.com" style="flex:1;background:transparent;border:none;color:var(--text);font-size:13px;outline:none;font-family:inherit" />
+        <button onclick="saveBackend()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getBackend() {
+      return localStorage.getItem('backend_url') || '';
+    }
+    function saveBackend() {
+      let u = document.getElementById('set-backend').value.trim().replace(/\/$/, '');
+      if (u) { localStorage.setItem('backend_url', u); document.getElementById('set-backend').value = ''; loadAll(); }
+    }
+    function loadAll() {
+      const b = getBackend();
+      document.getElementById('backend-url').textContent = b || 'not set';
+      if (!b) return;
+      fetch(b + '/stats').then(r => r.json()).then(d => {
+        if (d.ok) {
+          document.getElementById('active').textContent = d.active;
+          document.getElementById('total').textContent = d.total;
+          document.getElementById('unsub').textContent = d.unsubscribed;
+          document.getElementById('health').textContent = '✅ Backend is live.';
+        }
+      }).catch(() => { document.getElementById('health').textContent = '⚠️ Could not reach backend (may be sleeping — free tier spins down).'; });
+    }
+    function checkHealth() { loadAll(); }
+    loadAll();
+  </script>
+</body>
+</html>

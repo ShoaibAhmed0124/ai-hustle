@@ -1,14 +1,13 @@
 """
 agent_publisher.py — AGENT 4: The Publisher.
 - Always: saves the issue as local files (HTML you can open + JSON backup).
-- If Beehiiv keys are set: also creates a draft post in Beehiiv.
 - If WEBSITE_POSTS_DIR is set: writes a dated .md file there too.
+- If Resend is configured: emails all active subscribers directly.
+  (Our OWN system — no Beehiiv, no third-party branding.)
 """
 import json
 import os
 from datetime import datetime, timezone
-
-import requests
 
 import config
 
@@ -71,30 +70,42 @@ def _save_to_website(package: dict) -> None:
     print(f"  🌐 Wrote website post → {path}")
 
 
-def _publish_beehiiv(package: dict) -> None:
-    """Create a DRAFT post in Beehiiv (you approve before it sends — safe)."""
-    if not (config.BEEHIIV_API_KEY and config.BEEHIIV_PUBLICATION_ID):
-        print("  ℹ️  Beehiiv not configured — skipping email publish.")
+def _email_subscribers(package: dict) -> None:
+    """Send the issue to every active subscriber via Resend (our own system)."""
+    # Import lazily so local dry-runs don't require Resend to be set up.
+    try:
+        import email_sender
+        import subscribers
+    except Exception as e:
+        print(f"  ⚠️ Could not load email/subscriber modules: {e}")
         return
 
-    url = f"https://api.beehiiv.com/v2/publications/{config.BEEHIIV_PUBLICATION_ID}/posts"
-    headers = {"Authorization": f"Bearer {config.BEEHIIV_API_KEY}"}
-    body = {
-        "title": package["subject_line"],
-        "subtitle": package["preview_text"],
-        "content": package["html_body"],
-        "status": "draft",
-        "audience": "free",
-        "publish_platforms": {"email": True, "web": True},
-    }
-    try:
-        r = requests.post(url, json=body, headers=headers, timeout=20)
-        if r.ok:
-            print("  📧 Beehiiv draft created! Review & send from your dashboard.")
-        else:
-            print(f"  ⚠️ Beehiiv error {r.status_code}: {r.text[:200]}")
-    except Exception as e:
-        print(f"  ⚠️ Beehiiv request failed: {e}")
+    active = subscribers.get_active()
+    if not active:
+        print("  ℹ️  No active subscribers yet — skipping email send.")
+        return
+
+    emails = [s["email"] for s in active]
+    print(f"  📧 Sending to {len(emails)} subscriber(s)...")
+
+    # Resend free tier = 100 emails/day. Batch in chunks of 100.
+    BATCH = 100
+    sent_ok = 0
+    for i in range(0, len(emails), BATCH):
+        batch = emails[i:i + BATCH]
+        result = email_sender.send_newsletter(
+            to_emails=batch,
+            subject=package["subject_line"],
+            body_html=package.get("html_body") or "",
+            preview=package.get("preview_text", ""),
+        )
+        if result.get("status") == "sent":
+            sent_ok += len(batch)
+        elif result.get("status") == "skipped":
+            print("  ℹ️  Resend not configured — saved issue locally but did not email.")
+            return
+
+    print(f"  ✅ Emailed {sent_ok} subscriber(s).")
 
 
 def run(package: dict) -> None:
@@ -102,5 +113,5 @@ def run(package: dict) -> None:
     print("📤 [Publisher] Shipping the issue...")
     _save_local(package)
     _save_to_website(package)
-    _publish_beehiiv(package)
+    _email_subscribers(package)
     print("  ✅ Done.")

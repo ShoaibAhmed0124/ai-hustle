@@ -28,10 +28,18 @@ jobs:
       - name: Run the agent pipeline
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          BEEHIIV_API_KEY: ${{ secrets.BEEHIIV_API_KEY }}
-          BEEHIIV_PUBLICATION_ID: ${{ secrets.BEEHIIV_PUBLICATION_ID }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM: "The AI Hustle <onboarding@resend.dev>"
+          LANDING_URL: "https://theaihustle.surge.sh"
           NEWSLETTER_NAME: "The AI Hustle"
           NEWSLETTER_TAGLINE: "AI tools & money moves, delivered fresh daily."
           TARGET_AUDIENCE: "Students & side-hustlers building income with AI"
           AFFILIATE_LINKS: "{}"
         run: python run.py --publish
+
+      - name: Save today's issue as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: newsletter-issue
+          path: archive/
+          retention-days: 30

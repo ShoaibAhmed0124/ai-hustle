@@ -296,7 +296,7 @@
       <h1 class="reveal">AI tools &amp; <span class="grad-text">money moves</span>,<br/>delivered fresh every morning.</h1>
       <p class="sub reveal">The 5-minute read for students &amp; side-hustlers building real income with AI. No fluff. No hype. Just what actually works.</p>
 
-      <form class="form-box reveal" action="https://mohammed-shoaibs-newsletter.beehiiv.com/?modal=signup" method="get" target="_blank">
+      <form class="form-box reveal" id="subscribeForm1" onsubmit="return handleSubscribe(event, this)">
         <input type="email" name="email" placeholder="your@email.com" required />
         <button type="submit">Get the daily drop →</button>
       </form>
@@ -477,7 +477,7 @@
       <div class="badge reveal"><span class="live"></span> Free forever · No spam</div>
       <h2 class="reveal">Start your day <span class="grad-text">ahead of everyone.</span></h2>
       <p class="reveal">Join 2,400+ hustlers getting the AI edge every morning.</p>
-      <form class="form-box reveal" action="https://mohammed-shoaibs-newsletter.beehiiv.com/?modal=signup" method="get" target="_blank" style="margin-top: 0;">
+      <form class="form-box reveal" id="subscribeForm2" onsubmit="return handleSubscribe(event, this)" style="margin-top: 0;">
         <input type="email" name="email" placeholder="your@email.com" required />
         <button type="submit">Get the daily drop →</button>
       </form>
@@ -542,6 +542,75 @@
       if (window.scrollY > 40) { nav.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)'; }
       else { nav.style.boxShadow = 'none'; }
     });
+
+    /* ---- Subscription handler (custom backend) ---- */
+    // 🔧 Replace this with your Render backend URL after deploying server.py
+    const BACKEND_URL = 'https://YOUR-RENDER-BACKEND.onrender.com';
+
+    function validEmail(e) {
+      // Basic regex check to block obvious junk before hitting the API
+      return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e) && !/(test|example|\.test|@10minut|@mailinator|@guerrilla|@tempmail)/i.test(e);
+    }
+
+    function handleSubscribe(event, form) {
+      event.preventDefault();
+      const input = form.querySelector('input[type="email"]');
+      const btn = form.querySelector('button');
+      const email = input.value.trim();
+
+      if (!validEmail(email)) {
+        showToast('⚠️ Please enter a valid email.', 'error');
+        return false;
+      }
+
+      btn.disabled = true;
+      const originalText = btn.textContent;
+      btn.textContent = 'Adding you...';
+
+      fetch(BACKEND_URL + '/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data.ok && data.status !== 'error') {
+            showToast(data.message || "You're in! 🎉", 'success');
+            input.value = '';
+          } else {
+            showToast(data.message || 'Something went wrong.', 'error');
+          }
+        })
+        .catch(() => {
+          showToast('Network error. Try again in a moment.', 'error');
+        })
+        .finally(() => {
+          btn.disabled = false;
+          btn.textContent = originalText;
+        });
+
+      return false;
+    }
+
+    /* ---- Toast notifications ---- */
+    function showToast(msg, type) {
+      let t = document.getElementById('toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'toast';
+        t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:#141416;border:1px solid rgba(255,255,255,0.1);color:#f4f4f6;padding:16px 28px;border-radius:14px;font-size:15px;font-weight:500;z-index:9999;transition:transform 0.4s cubic-bezier(.2,.8,.2,1),opacity 0.4s;opacity:0;backdrop-filter:blur(10px);box-shadow:0 20px 40px rgba(0,0,0,0.4);';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.borderColor = type === 'success' ? '#00ff9d' : '#ff3d71';
+      t.style.opacity = '1';
+      t.style.transform = 'translateX(-50%) translateY(0)';
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.transform = 'translateX(-50%) translateY(80px)';
+      }, 3500);
+    }
   </script>
 
 </body>
